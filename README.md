@@ -10,7 +10,21 @@ You can run your application in dev mode that enables live coding using:
 ```shell script
 ./gradlew quarkusDev
 ```
+Docker compose
+```yaml
+version: '3.8'
+services:
+  usermanagement:
+    image: postgres:16.2
+    restart: always
+    ports:
+      - '15432:5432'
+    environment:
+      POSTGRES_PASSWORD: strongpassword
+      POSTGRES_USER: admin
+      POSTGRES_DB: bankdb
 
+```
 > **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
 
 ## Packaging and running the application
