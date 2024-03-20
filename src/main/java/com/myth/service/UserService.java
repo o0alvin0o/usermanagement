@@ -55,7 +55,7 @@ public class UserService {
     }
 
     public UserDTO getUserDTO(String username) {
-        return null;
+        return userRepo.find("username", username).project(UserDTO.class).firstResult();
     }
 
     public User getUser(String username) {
