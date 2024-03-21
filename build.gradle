@@ -25,8 +25,8 @@ dependencies {
 
 //    Security
     implementation 'io.quarkus:quarkus-security'
+    implementation 'io.quarkus:quarkus-security-jpa'
     implementation 'io.quarkus:quarkus-oidc-client'
-    implementation 'com.password4j:password4j:1.8.1'
     implementation 'io.quarkus:quarkus-smallrye-jwt'
     implementation 'io.quarkus:quarkus-smallrye-jwt-build'
 

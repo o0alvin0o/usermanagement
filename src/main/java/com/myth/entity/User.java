@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.myth.enums.UserRole;
 import com.myth.enums.UserStatus;
 import com.myth.views.UserView;
+import io.quarkus.security.jpa.Password;
+import io.quarkus.security.jpa.Roles;
+import io.quarkus.security.jpa.UserDefinition;
+import io.quarkus.security.jpa.Username;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -17,20 +21,21 @@ import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
+@UserDefinition
 public class User {
 
     @Id
+    @Username
     private String username;
 
     @Column(name = "hashed_password")
+    @Password
     @JsonView(UserView.Private.class)
     private String hashedPassword;
-
-    @JsonView(UserView.Private.class)
-    private String salt;
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -50,6 +55,12 @@ public class User {
     @Column(name = "role")
     private Set<UserRole> roles;
 
+    @Roles
+    @JsonView(UserView.Private.class)
+    public Set<String> getStringRoles() {
+        return roles.stream().map(Enum::toString).collect(Collectors.toSet());
+    }
+
     public String getUsername() {
         return username;
     }
@@ -64,14 +75,6 @@ public class User {
 
     public void setHashedPassword(String hashedPassword) {
         this.hashedPassword = hashedPassword;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     public String getEmail() {

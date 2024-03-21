@@ -1,8 +1,13 @@
 package com.myth.api;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.myth.dto.UserCreationDTO;
+import com.myth.entity.User;
 import com.myth.service.DataGenerator;
 import com.myth.service.UserService;
+import com.myth.views.UserView;
+import io.smallrye.common.annotation.Blocking;
+import io.smallrye.mutiny.Uni;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -30,5 +35,14 @@ public class SecretAPI {
         }
         return RestResponse.ok(String.format("%s user(s) created!!", creationCount));
     }
+
+
+    @JsonView(UserView.Public.class)
+    @GET
+    @Path("/random-user")
+    public RestResponse<User> getRandomUser() {
+        return RestResponse.ok(userService.getRandomUser());
+    }
+
 
 }

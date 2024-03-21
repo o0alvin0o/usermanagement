@@ -34,4 +34,8 @@ public class UserRepo implements PanacheRepository<User> {
                         .page(pageIndex, pageSize);
         return query.list();
     }
+
+    public User findRandomUser() {
+        return find("order by random()").firstResult();
+    }
 }

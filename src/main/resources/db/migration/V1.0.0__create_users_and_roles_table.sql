@@ -5,7 +5,6 @@ create table users
     email           varchar(255) not null
         unique,
     hashed_password varchar(255),
-    salt            varchar(255),
     status          varchar(255)
         constraint users_status_check
             check ((status)::text = ANY

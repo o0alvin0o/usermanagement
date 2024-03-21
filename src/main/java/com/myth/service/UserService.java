@@ -11,6 +11,7 @@ import com.myth.exception.UsernameNotFoundException;
 import com.myth.repo.UserRepo;
 import com.myth.utils.PasswordUtils;
 import io.quarkus.panache.common.Sort;
+import io.smallrye.common.annotation.Blocking;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 @ApplicationScoped
+@Blocking
 public class UserService {
 
     @Inject
@@ -28,13 +30,11 @@ public class UserService {
     @Transactional
     public void createUser(UserCreationDTO user) {
         User u = new User();
-        String salt = PasswordUtils.generateSalt();
-        String hashedPassword = PasswordUtils.hash(user.password(), salt);
+        String hashedPassword = PasswordUtils.hash(user.password());
         u.setUsername(user.username());
         u.setEmail(user.email());
         u.setRoles(Set.of(UserRole.USER));
         u.setStatus(UserStatus.SUSPENDED);
-        u.setSalt(salt);
         u.setHashedPassword(hashedPassword);
         u.setCreationDate(LocalDateTime.now());
         userRepo.persist(u);
@@ -60,6 +60,10 @@ public class UserService {
 
     public User getUser(String username) {
         return userRepo.find("username", username).firstResult();
+    }
+
+    public User getRandomUser() {
+        return userRepo.findRandomUser();
     }
 
     public boolean isUsernameExist(String username) {
