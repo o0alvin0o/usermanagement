@@ -14,6 +14,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.inject.Inject;
 
+import java.time.LocalDateTime;
+
 
 @ApplicationScoped
 public class UsernamePasswordIdentityProvider implements IdentityProvider<UsernamePasswordAuthenticationRequest> {
@@ -34,6 +36,8 @@ public class UsernamePasswordIdentityProvider implements IdentityProvider<Userna
                     String rawPass = new String(request.getPassword().getPassword());
                     User dbUser = userService.getUser(username);
                     if(PasswordUtils.verify(rawPass, dbUser.getSalt(), dbUser.getHashedPassword())) {
+                        dbUser.setLastLogin(LocalDateTime.now());
+                        userService.updateUser(dbUser);
                         return UserDetailsService.createSecurityIdentity(dbUser);
                     } else {
                         throw new AuthenticationFailedException("Invalid credentials");

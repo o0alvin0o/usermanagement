@@ -85,4 +85,9 @@ public class UserService {
     public List<User> getAllUsers(int page, int pageSize, String order, Sort.Direction sortDirection) {
         return userRepo.getAllUsers(page, pageSize, order, sortDirection);
     }
+
+    @Transactional
+    public void updateUser(User user) {
+        userRepo.persist(user);
+    }
 }
